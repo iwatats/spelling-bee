@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🐝 Spelling Bee Practice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #fffdf7;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem 4rem;
+      color: #222;
+    }
+
+    .app {
+      max-width: 580px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .bee-emoji {
+      font-size: 3rem;
+      display: inline-block;
+      animation: wobble 2s ease-in-out infinite;
+    }
+
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-6deg); }
+      50% { transform: rotate(6deg); }
+    }
+
+    .header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.4rem;
+      color: #633806;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      margin-top: 0.25rem;
+    }
+
+    .header p {
+      font-size: 15px;
+      color: #888;
+      margin-top: 6px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e8e4d8;
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.15rem;
+      color: #333;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .word-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 0.85rem;
+    }
+
+    .word-input-row input {
+      flex: 1;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .word-input-row input:focus { border-color: #1D9E75; }
+
+    .add-btn {
+      background: #FAC775;
+      color: #633806;
+      border: none;
+      border-radius: 10px;
+      padding: 0 20px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.1s;
+      white-space: nowrap;
+    }
+    .add-btn:hover { opacity: 0.85; }
+    .add-btn:active { transform: scale(0.96); }
+
+    .word-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 36px;
+    }
+
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #EEEDFE;
+      color: #3C3489;
+      border-radius: 20px;
+      padding: 5px 14px 5px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      animation: popin 0.2s cubic-bezier(.4,1.6,.6,1);
+    }
+
+    @keyframes popin {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .chip-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #7F77DD;
+      font-size: 17px;
+      line-height: 1;
+      padding: 0;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+    }
+    .chip-remove:hover { opacity: 1; }
+
+    .empty-hint {
+      font-size: 13px;
+      color: #aaa;
+      font-style: italic;
+      align-self: center;
+    }
+
+    .start-section {
+      text-align: center;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    .start-btn {
+      background: #1D9E75;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 44px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.1s, box-shadow 0.1s;
+      box-shadow: 0 4px 0 #085041;
+    }
+    .start-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .start-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #085041; }
+    .start-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+
+    .start-hint {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .practice-card {
+      background: #fff;
+      border: 1px solid #e8e4d8;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      display: none;
+    }
+
+    .practice-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.15rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .word-display {
+      background: #FAEEDA;
+      border-radius: 14px;
+      padding: 2rem 1rem;
+      margin-bottom: 1rem;
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.3s;
+    }
+
+    .word-display.idle { background: #f5f5f0; }
+
+    .word-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .current-word {
+      font-family: 'Fredoka One', cursive;
+      font-size: 3.2rem;
+      color: #633806;
+      letter-spacing: 2px;
+      animation: fadeUp 0.3s ease;
+    }
+
+    @keyframes fadeUp {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .word-placeholder {
+      font-size: 1rem;
+      color: #aaa;
+      font-style: italic;
+    }
+
+    .spelling-reveal {
+      font-size: 1.3rem;
+      letter-spacing: 8px;
+      color: #085041;
+      font-weight: 700;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .speak-btn {
+      background: #1D9E75;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 32px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.1s, transform 0.1s;
+      margin-bottom: 0.75rem;
+    }
+    .speak-btn:hover:not(:disabled) { opacity: 0.85; }
+    .speak-btn:active:not(:disabled) { transform: scale(0.97); }
+    .speak-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .reveal-btn {
+      background: #7F77DD;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.1s, transform 0.1s;
+    }
+    .reveal-btn:hover:not(:disabled) { opacity: 0.85; }
+    .reveal-btn:active:not(:disabled) { transform: scale(0.97); }
+    .reveal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .next-btn {
+      background: #D85A30;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 24px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.1s, transform 0.1s;
+    }
+    .next-btn:hover:not(:disabled) { opacity: 0.85; }
+    .next-btn:active:not(:disabled) { transform: scale(0.97); }
+    .next-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .counter {
+      font-size: 13px;
+      font-weight: 700;
+      color: #aaa;
+      margin-bottom: 0.75rem;
+    }
+
+    .back-btn {
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 50px;
+      padding: 7px 18px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: #999;
+      transition: background 0.15s;
+    }
+    .back-btn:hover { background: #f5f5f0; }
+
+    .done-card {
+      background: #E1F5EE;
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      display: none;
+      animation: fadeUp 0.4s ease;
+    }
+
+    .done-card h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.8rem;
+      color: #085041;
+      margin-bottom: 8px;
+    }
+
+    .done-card p {
+      font-size: 14px;
+      color: #0F6E56;
+      margin-bottom: 1.25rem;
+    }
+
+    .speaking-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      animation: pulse 0.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.5); }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 { font-size: 2rem; }
+      .current-word { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="bee-emoji">🐝</div>
+    <h1>Spelling Bee Practice</h1>
+    <p>Add your spelling words, then practice out loud!</p>
+  </div>
+
+  <div class="card" id="setup-section">
+    <div class="section-title">📋 Your word list</div>
+    <div class="word-input-row">
+      <input type="text" id="word-input" placeholder="Type a word and press Enter..." maxlength="30" />
+      <button class="add-btn" onclick="addWord()">Add ➕</button>
+    </div>
+    <div class="word-chips" id="word-chips">
+      <span class="empty-hint" id="empty-hint">No words yet — add some above!</span>
+    </div>
+  </div>
+
+  <div class="start-section" id="start-section">
+    <button class="start-btn" id="start-btn" onclick="startPractice()" disabled>
+      Start Practice! 🚀
+    </button>
+    <div class="start-hint" id="start-hint">Add at least 1 word to begin</div>
+  </div>
+
+  <div class="practice-card" id="practice-section">
+    <div class="practice-title">🎧 Practice time!</div>
+
+    <div class="word-display idle" id="word-display">
+      <span class="word-placeholder">Press "Say it!" to hear a word 🎧</span>
+    </div>
+
+    <button class="speak-btn" id="speak-btn" onclick="speakWord()">
+      🔊 Say it!
+    </button>
+
+    <div class="controls">
+      <button class="reveal-btn" id="reveal-btn" onclick="revealSpelling()" disabled>
+        👁 Show spelling
+      </button>
+      <button class="next-btn" id="next-btn" onclick="nextWord()">
+        Next word ➡
+      </button>
+    </div>
+
+    <div class="counter" id="counter"></div>
+    <button class="back-btn" onclick="restartSetup()">← Back to word list</button>
+  </div>
+
+  <div class="done-card" id="done-section">
+    <h2>🎉 Amazing job!</h2>
+    <p>You went through all your words. Keep practicing to become a spelling champion!</p>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <button class="speak-btn" style="margin:0;" onclick="restartPractice()">
+        🔁 Practice again
+      </button>
+      <button class="back-btn" onclick="restartSetup()">← Change word list</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let words = [];
+  let shuffled = [];
+  let currentIndex = 0;
+  let currentWord = null;
+  let isSpeaking = false;
+  let revealed = false;
+
+  const wordInput = document.getElementById('word-input');
+  const chipsEl = document.getElementById('word-chips');
+  const emptyHint = document.getElementById('empty-hint');
+  const startBtn = document.getElementById('start-btn');
+  const startHint = document.getElementById('start-hint');
+  const setupSection = document.getElementById('setup-section');
+  const startSection = document.getElementById('start-section');
+  const practiceSection = document.getElementById('practice-section');
+  const doneSection = document.getElementById('done-section');
+  const wordDisplay = document.getElementById('word-display');
+  const speakBtn = document.getElementById('speak-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const revealBtn = document.getElementById('reveal-btn');
+  const counter = document.getElementById('counter');
+
+  wordInput.addEventListener('keydown', e => { if (e.key === 'Enter') addWord(); });
+
+  function addWord() {
+    const val = wordInput.value.trim().toLowerCase();
+    if (!val || words.includes(val)) { wordInput.value = ''; return; }
+    words.push(val);
+    wordInput.value = '';
+    renderChips();
+    updateStartBtn();
+    wordInput.focus();
+  }
+
+  function removeWord(w) {
+    words = words.filter(x => x !== w);
+    renderChips();
+    updateStartBtn();
+  }
+
+  function renderChips() {
+    chipsEl.innerHTML = '';
+    if (words.length === 0) {
+      chipsEl.appendChild(emptyHint);
+      return;
+    }
+    words.forEach(w => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.innerHTML = w + ' <button class="chip-remove" onclick="removeWord(\'' + w + '\')" aria-label="Remove ' + w + '">×</button>';
+      chipsEl.appendChild(chip);
+    });
+  }
+
+  function updateStartBtn() {
+    startBtn.disabled = words.length === 0;
+    startHint.textContent = words.length === 0
+      ? 'Add at least 1 word to begin'
+      : words.length + ' word' + (words.length > 1 ? 's' : '') + ' ready!';
+  }
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function startPractice() {
+    shuffled = shuffle(words);
+    currentIndex = 0;
+    setupSection.style.display = 'none';
+    startSection.style.display = 'none';
+    doneSection.style.display = 'none';
+    practiceSection.style.display = 'block';
+    resetRevealBtn();
+    nextWord();
+  }
+
+  function nextWord() {
+    if (currentIndex >= shuffled.length) { showDone(); return; }
+    currentWord = shuffled[currentIndex];
+    currentIndex++;
+    revealed = false;
+    wordDisplay.className = 'word-display idle';
+    wordDisplay.innerHTML = '<span class="word-placeholder">Ready... press "Say it!" 🎧</span>';
+    revealBtn.disabled = true;
+    speakBtn.disabled = false;
+    speakBtn.innerHTML = '🔊 Say it!';
+    resetRevealBtn();
+    counter.textContent = 'Word ' + currentIndex + ' of ' + shuffled.length;
+    window.speechSynthesis.cancel();
+  }
+
+  function speakWord() {
+    if (!currentWord || isSpeaking) return;
+    isSpeaking = true;
+    speakBtn.innerHTML = '<span class="speaking-dot"></span> Speaking...';
+    speakBtn.disabled = true;
+    wordDisplay.className = 'word-display';
+    wordDisplay.innerHTML = '<span class="word-label">Listen carefully!</span><span style="font-size:2.5rem;">🔊</span>';
+
+    const utter = new SpeechSynthesisUtterance(currentWord);
+    utter.rate = 0.82;
+    utter.pitch = 1.1;
+    utter.onend = () => {
+      isSpeaking = false;
+      speakBtn.innerHTML = '🔊 Say it again';
+      speakBtn.disabled = false;
+      revealBtn.disabled = false;
+      wordDisplay.innerHTML = '<span class="word-label">Spell it out loud!</span><span style="font-size:2.5rem;">✏️</span><span style="font-size:13px;color:#aaa;">Press "Next word" when done, or "Show spelling" to check</span>';
+    };
+    window.speechSynthesis.speak(utter);
+  }
+
+  function revealSpelling() {
+    if (!currentWord || revealed) return;
+    revealed = true;
+    const letters = currentWord.toUpperCase().split('').join(' · ');
+    wordDisplay.innerHTML =
+      '<span class="word-label">The word is...</span>' +
+      '<span class="current-word">' + currentWord + '</span>' +
+      '<span class="spelling-reveal">' + letters + '</span>';
+    revealBtn.disabled = true;
+    revealBtn.textContent = '✓ Shown!';
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(currentWord);
+    utter.rate = 0.75;
+    utter.pitch = 1.0;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function resetRevealBtn() {
+    revealBtn.textContent = '👁 Show spelling';
+    revealBtn.disabled = true;
+  }
+
+  function showDone() {
+    practiceSection.style.display = 'none';
+    doneSection.style.display = 'block';
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance('Amazing work! You finished all your spelling words!');
+    utter.rate = 0.9;
+    utter.pitch = 1.2;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function restartPractice() {
+    doneSection.style.display = 'none';
+    practiceSection.style.display = 'block';
+    startPractice();
+  }
+
+  function restartSetup() {
+    window.speechSynthesis.cancel();
+    doneSection.style.display = 'none';
+    practiceSection.style.display = 'none';
+    setupSection.style.display = 'block';
+    startSection.style.display = 'block';
+    currentWord = null;
+    isSpeaking = false;
+    speakBtn.innerHTML = '🔊 Say it!';
+    resetRevealBtn();
+  }
+</script>
+</body>
+</html>
