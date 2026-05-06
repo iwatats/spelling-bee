@@ -1,0 +1,11 @@
+sun
+moon
+star
+tree
+leaf
+book
+door
+farm
+road
+bell
+president
