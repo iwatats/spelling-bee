@@ -61,103 +61,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
 
 /* TEST */
 #child{background:var(--honey-light)}
-.c-header{background:var(--white);border-bottom:1px solid var(--border);padding:0.8rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px}
-.c-title{font-family:'Fredoka One',cursive;font-size:1.25rem;flex:1}
+.c-header{background:var(--white);border-bottom:1px solid var(--border);padding:0.8rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.c-title{font-family:'Fredoka One',cursive;font-size:1.25rem}
 .c-prog{border-radius:20px;padding:5px 14px;font-size:0.82rem;font-weight:800}
 
-/* Settings cog button */
-.settings-btn{
-  background:none;border:1.5px solid var(--border);border-radius:12px;
-  width:38px;height:38px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:1.2rem;flex-shrink:0;
-  transition:background 0.15s,transform 0.1s;
-}
-.settings-btn:active{transform:scale(0.92)}
-
-/* ── VOICE PANEL (slide-up sheet) ── */
-.voice-backdrop{
-  position:fixed;inset:0;background:rgba(0,0,0,0.35);
-  display:none;z-index:100;
-  animation:bdin 0.2s ease;
-}
-@keyframes bdin{from{opacity:0}to{opacity:1}}
-.voice-backdrop.open{display:block}
-
-.voice-sheet{
-  position:fixed;bottom:0;left:0;right:0;
-  background:var(--white);border-radius:24px 24px 0 0;
-  padding:0 0 env(safe-area-inset-bottom,0);
-  z-index:101;
-  max-height:75vh;display:flex;flex-direction:column;
-  transform:translateY(100%);
-  transition:transform 0.35s cubic-bezier(.4,0,.2,1);
-}
-.voice-sheet.open{transform:translateY(0)}
-
-.sheet-handle{width:40px;height:5px;background:var(--border);border-radius:3px;margin:12px auto 0}
-.sheet-header{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.sheet-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--text)}
-.sheet-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);line-height:1;padding:4px}
-
-.voice-search{
-  margin:0 1.25rem 0.75rem;
-  padding:10px 14px;border:1.5px solid var(--border);border-radius:12px;
-  font-family:'Nunito',sans-serif;font-size:14px;outline:none;
-  background:var(--bg);transition:border-color 0.15s;
-}
-.voice-search:focus{border-color:var(--teal)}
-
-.voice-list{overflow-y:auto;flex:1;padding:0 1.25rem 1.25rem}
-
-.voice-group-label{
-  font-size:11px;font-weight:800;color:var(--text-muted);
-  text-transform:uppercase;letter-spacing:1.2px;
-  padding:10px 0 6px;border-top:1px solid var(--border);margin-top:4px;
-}
-.voice-group-label:first-child{border-top:none;margin-top:0}
-
-.voice-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:12px;
-  cursor:pointer;transition:background 0.12s;
-  margin-bottom:3px;
-}
-.voice-item:hover{background:var(--bg)}
-.voice-item.selected{background:var(--honey-light)}
-
-.voice-info{flex:1;min-width:0}
-.voice-name{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.voice-lang{font-size:11px;color:var(--text-muted);margin-top:1px}
-
-.voice-preview-btn{
-  background:none;border:1.5px solid var(--border);border-radius:10px;
-  padding:6px 10px;font-size:1rem;cursor:pointer;flex-shrink:0;
-  transition:background 0.12s,transform 0.1s;
-}
-.voice-preview-btn:active{transform:scale(0.9)}
-.voice-preview-btn.playing{background:var(--honey-light);border-color:var(--honey)}
-
-.voice-select-btn{
-  border:none;border-radius:10px;padding:6px 12px;
-  font-family:'Fredoka One',cursive;font-size:0.85rem;
-  cursor:pointer;flex-shrink:0;white-space:nowrap;
-  transition:background 0.12s,transform 0.1s;
-  background:var(--bg);color:var(--text-muted);
-}
-.voice-item.selected .voice-select-btn{color:#fff}
-.voice-select-btn:active{transform:scale(0.95)}
-
-/* Theme colours for select btn */
-.theme-jin .voice-item.selected{background:var(--jin-light)}
-.theme-jin .voice-item.selected .voice-select-btn{background:var(--jin)}
-.theme-kei .voice-item.selected{background:var(--kei-light)}
-.theme-kei .voice-item.selected .voice-select-btn{background:var(--kei)}
-
-/* Jin / Kei themes */
+/* Jin theme */
 .theme-jin .c-title{color:var(--jin)}
 .theme-jin .c-prog{background:var(--jin-light);color:var(--jin-dark)}
-.theme-jin .settings-btn{border-color:var(--jin-light)}
-.theme-jin .settings-btn:active{background:var(--jin-light)}
 .theme-jin .hear-btn{background:var(--jin);box-shadow:0 3px 0 var(--jin-dark)}
 .theme-jin .hear-btn:active{box-shadow:0 1px 0 var(--jin-dark)}
 .theme-jin .answer-input:focus{border-color:var(--jin);box-shadow:0 0 0 4px rgba(108,92,231,0.12)}
@@ -167,10 +77,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
 .theme-jin .next-btn:active{box-shadow:0 1px 0 var(--jin-dark)}
 .theme-jin .retry-badge{background:var(--jin-light);color:var(--jin-dark)}
 
+/* Kei theme */
 .theme-kei .c-title{color:var(--kei)}
 .theme-kei .c-prog{background:var(--kei-light);color:var(--kei-dark)}
-.theme-kei .settings-btn{border-color:var(--kei-light)}
-.theme-kei .settings-btn:active{background:var(--kei-light)}
 .theme-kei .hear-btn{background:var(--kei);box-shadow:0 3px 0 var(--kei-dark)}
 .theme-kei .hear-btn:active{box-shadow:0 1px 0 var(--kei-dark)}
 .theme-kei .answer-input:focus{border-color:var(--kei);box-shadow:0 0 0 4px rgba(232,84,42,0.12)}
@@ -189,16 +98,31 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
 .hear-btn{color:#fff;border:none;border-radius:50px;padding:11px 24px;font-family:'Fredoka One',cursive;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;gap:7px;transition:opacity 0.15s,transform 0.1s,box-shadow 0.1s;margin-top:4px}
 .hear-btn:active{transform:translateY(2px)}
 .hear-btn:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none}
+
 .answer-area{background:var(--white);border-radius:22px;border:1.5px solid var(--border);padding:1.4rem 1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;flex-shrink:0}
 .answer-label{font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;align-self:flex-start}
-.answer-input{width:100%;padding:18px 20px;border:2.5px solid var(--border);border-radius:16px;font-family:'Fredoka One',cursive;font-size:2.2rem;text-align:center;letter-spacing:4px;outline:none;color:var(--text);background:var(--bg);transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;-webkit-appearance:none;text-transform:lowercase;caret-color:var(--teal)}
+.answer-input{
+  width:100%;padding:18px 20px;
+  border:2.5px solid var(--border);border-radius:16px;
+  font-family:'Fredoka One',cursive;font-size:2.2rem;
+  text-align:center;letter-spacing:4px;
+  outline:none;color:var(--text);background:var(--bg);
+  transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;
+  -webkit-appearance:none;
+  text-transform:lowercase;
+  caret-color:var(--teal);
+  /* Disable all keyboard assistance */
+  autocomplete:off;
+}
 .answer-input::placeholder{color:#CCC;letter-spacing:2px;font-size:1.5rem}
 .answer-input.correct{border-color:var(--green);background:var(--green-light);box-shadow:0 0 0 4px rgba(39,174,96,0.12)}
 .answer-input.wrong{border-color:var(--red);background:var(--red-light);box-shadow:0 0 0 4px rgba(229,62,62,0.12)}
 .answer-input:disabled{cursor:default}
+
 .check-btn{width:100%;padding:15px;border:none;border-radius:16px;font-family:'Fredoka One',cursive;font-size:1.2rem;cursor:pointer;transition:transform 0.1s,box-shadow 0.1s,opacity 0.15s}
 .check-btn:active{transform:translateY(3px)}
 .check-btn:disabled{opacity:0.32;cursor:not-allowed;box-shadow:none}
+
 .feedback{border-radius:18px;padding:1.2rem 1.5rem;text-align:center;animation:fadeup 0.3s cubic-bezier(.4,1.4,.6,1);flex-shrink:0}
 @keyframes fadeup{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
 .feedback.correct{background:var(--green-light);border:1.5px solid rgba(39,174,96,0.3)}
@@ -209,8 +133,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
 .fb-sub{font-size:0.9rem;color:var(--text-muted);display:block;margin-bottom:2px}
 .fb-spelling{font-family:'Fredoka One',cursive;font-size:1.35rem;letter-spacing:7px;color:var(--teal-dark);display:block;margin-top:8px}
 .fb-retry-note{font-size:0.82rem;font-weight:700;margin-top:8px;display:block;color:#993C1D}
+
 .next-btn{width:100%;padding:15px;color:#fff;border:none;border-radius:16px;font-family:'Fredoka One',cursive;font-size:1.2rem;cursor:pointer;transition:transform 0.1s,box-shadow 0.1s;flex-shrink:0}
 .next-btn:active{transform:translateY(3px)}
+
 .s-ring{display:inline-flex;align-items:center;gap:4px;vertical-align:middle;margin-left:4px}
 .s-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.85);animation:sdot 1.1s ease-in-out infinite}
 .s-dot:nth-child(2){animation-delay:.15s}.s-dot:nth-child(3){animation-delay:.3s}
@@ -219,7 +145,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
 /* RESULTS */
 #results{align-items:center;justify-content:center;background:var(--honey-light)}
 .r-card{background:var(--white);border-radius:28px;border:1px solid var(--border);padding:2rem 1.75rem;width:92%;max-width:420px;box-shadow:0 12px 40px rgba(0,0,0,0.07)}
-.r-card h2{font-family:'Fredoka One',cursive;font-size:2rem;text-align:center;margin-bottom:6px;color:var(--honey-dark)}
+.r-card h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--honey-dark);text-align:center;margin-bottom:6px}
 .r-score{text-align:center;font-family:'Fredoka One',cursive;font-size:4.2rem;line-height:1;margin:0.3rem 0 1rem}
 .r-score small{font-size:1.8rem;color:var(--text-muted)}
 .r-list{display:flex;flex-direction:column;gap:7px;margin-bottom:1.25rem;max-height:240px;overflow-y:auto}
@@ -283,7 +209,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
     <span style="font-size:1.8rem">🐝</span>
     <span class="c-title" id="c-title">Spelling Test!</span>
     <div class="c-prog" id="c-prog">— / —</div>
-    <button class="settings-btn" onclick="openVoicePanel()" title="Choose voice" aria-label="Choose voice">🎙️</button>
   </div>
   <div class="c-body">
     <div class="word-card">
@@ -294,10 +219,20 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
     </div>
     <div class="answer-area">
       <span class="answer-label">Type your answer</span>
-      <input class="answer-input" id="answer-input"
-        type="text" autocomplete="off" autocorrect="off"
-        autocapitalize="none" spellcheck="false"
-        placeholder="write here..." maxlength="40"/>
+      <input
+        class="answer-input"
+        id="answer-input"
+        type="text"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="none"
+        autocomplete="new-password"
+        spellcheck="false"
+        data-form-type="other"
+        inputmode="text"
+        placeholder="write here..."
+        maxlength="40"
+      />
       <button class="check-btn" id="check-btn" onclick="checkAnswer()" disabled>
         ✅ Check my spelling!
       </button>
@@ -305,18 +240,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touc
     <div class="feedback" id="feedback" style="display:none"></div>
     <button class="next-btn" id="next-btn" style="display:none" onclick="advance()"></button>
   </div>
-</div>
-
-<!-- VOICE PANEL -->
-<div class="voice-backdrop" id="voice-backdrop" onclick="closeVoicePanel()"></div>
-<div class="voice-sheet" id="voice-sheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-header">
-    <span class="sheet-title">🎙️ Choose a voice</span>
-    <button class="sheet-close" onclick="closeVoicePanel()">✕</button>
-  </div>
-  <input class="voice-search" id="voice-search" type="text" placeholder="Search voices..." autocomplete="off" autocorrect="off" autocapitalize="none"/>
-  <div class="voice-list" id="voice-list"></div>
 </div>
 
 <!-- RESULTS -->
@@ -349,15 +272,33 @@ const CHILDREN={
 let wordBanks={jin:[],kei:[]};
 let activeChild=null;
 let queue=[],firstResults={},answered=false;
-
-// selectedVoice per child, stored in localStorage
-function getSavedVoice(child){return localStorage.getItem('bee_voice_'+child)||null}
-function saveVoice(child,name){localStorage.setItem('bee_voice_'+child,name)}
-let selectedVoiceObj=null; // SpeechSynthesisVoice object for current child
+let usVoice=null; // resolved US English voice
 
 // ── Screen routing ────────────────────────────────────────
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function goHome(){speechSynthesis.cancel();closeVoicePanel();show('home')}
+function goHome(){speechSynthesis.cancel();show('home')}
+
+// ── Resolve US English voice ──────────────────────────────
+// Priority: en-US default → any en-US → any en → first available
+function resolveUSVoice(){
+  const voices=speechSynthesis.getVoices();
+  return voices.find(v=>v.lang==='en-US'&&v.default)
+      || voices.find(v=>v.lang==='en-US')
+      || voices.find(v=>v.lang.startsWith('en'))
+      || voices[0]
+      || null;
+}
+
+function initVoice(){
+  usVoice=resolveUSVoice();
+  // Voices sometimes load late (especially on Chrome)
+  if(!usVoice){
+    speechSynthesis.onvoiceschanged=()=>{
+      usVoice=resolveUSVoice();
+      speechSynthesis.onvoiceschanged=null;
+    };
+  }
+}
 
 // ── Load word files ───────────────────────────────────────
 async function fetchWords(filename){
@@ -368,8 +309,10 @@ async function fetchWords(filename){
   if(!words.length)throw new Error(`${filename} is empty`);
   return words;
 }
+
 async function loadAllWords(){
   show('loading');
+  initVoice();
   try{
     const[jin,kei]=await Promise.all([fetchWords('jin.txt'),fetchWords('kei.txt')]);
     wordBanks.jin=jin;wordBanks.kei=kei;
@@ -383,160 +326,15 @@ async function loadAllWords(){
   }
 }
 
-// ── Voice management ──────────────────────────────────────
-function getVoices(){return window.speechSynthesis.getVoices()}
-
-function resolveVoice(child){
-  const saved=getSavedVoice(child);
-  const voices=getVoices();
-  if(saved){
-    const found=voices.find(v=>v.name===saved);
-    if(found)return found;
-  }
-  // Default: prefer an English voice
-  return voices.find(v=>v.lang.startsWith('en')&&v.default)
-      || voices.find(v=>v.lang.startsWith('en'))
-      || voices[0]
-      || null;
-}
-
-// ── Voice panel ───────────────────────────────────────────
-let previewingBtn=null;
-
-function openVoicePanel(){
-  speechSynthesis.cancel();
-  renderVoiceList('');
-  document.getElementById('voice-search').value='';
-  document.getElementById('voice-backdrop').classList.add('open');
-  document.getElementById('voice-sheet').classList.add('open');
-  document.getElementById('voice-search').focus();
-}
-function closeVoicePanel(){
-  speechSynthesis.cancel();
-  document.getElementById('voice-backdrop').classList.remove('open');
-  document.getElementById('voice-sheet').classList.remove('open');
-  if(previewingBtn){previewingBtn.classList.remove('playing');previewingBtn=null}
-}
-
-// Group voices by language region
-function langLabel(lang){
-  try{
-    const d=new Intl.DisplayNames(['en'],{type:'language'});
-    const r=new Intl.DisplayNames(['en'],{type:'region'});
-    const parts=lang.split('-');
-    let label=d.of(parts[0])||parts[0];
-    if(parts[1])try{label+=` (${r.of(parts[1])})`}catch{}
-    return label;
-  }catch{return lang}
-}
-
-function renderVoiceList(filter){
-  const voices=getVoices();
-  const f=filter.toLowerCase().trim();
-  const list=document.getElementById('voice-list');
-  list.innerHTML='';
-
-  // Filter
-  let shown=voices.filter(v=>{
-    if(!f)return true;
-    return v.name.toLowerCase().includes(f)||v.lang.toLowerCase().includes(f)||langLabel(v.lang).toLowerCase().includes(f);
-  });
-
-  if(!shown.length){
-    list.innerHTML='<div style="font-size:14px;color:var(--text-muted);padding:1rem 0;text-align:center">No voices match</div>';
-    return;
-  }
-
-  // Group by lang
-  const groups={};
-  shown.forEach(v=>{
-    const g=langLabel(v.lang);
-    if(!groups[g])groups[g]=[];
-    groups[g].push(v);
-  });
-
-  // English first
-  const keys=Object.keys(groups).sort((a,b)=>{
-    if(a.startsWith('English'))return -1;
-    if(b.startsWith('English'))return 1;
-    return a.localeCompare(b);
-  });
-
-  const saved=getSavedVoice(activeChild);
-
-  keys.forEach(lang=>{
-    const label=document.createElement('div');
-    label.className='voice-group-label';
-    label.textContent=lang;
-    list.appendChild(label);
-
-    groups[lang].forEach(voice=>{
-      const isSelected=voice.name===(saved||(selectedVoiceObj&&selectedVoiceObj.name));
-      const item=document.createElement('div');
-      item.className='voice-item'+(isSelected?' selected':'');
-      item.innerHTML=`
-        <div class="voice-info">
-          <div class="voice-name">${voice.name}</div>
-          <div class="voice-lang">${voice.lang}${voice.localService?' · on device':' · online'}</div>
-        </div>
-        <button class="voice-preview-btn" title="Preview">🔊</button>
-        <button class="voice-select-btn">${isSelected?'✓ Using':'Use'}</button>
-      `;
-
-      // Preview
-      item.querySelector('.voice-preview-btn').onclick=(e)=>{
-        e.stopPropagation();
-        const btn=e.currentTarget;
-        speechSynthesis.cancel();
-        if(previewingBtn&&previewingBtn!==btn){previewingBtn.classList.remove('playing');previewingBtn=null}
-        btn.classList.add('playing');previewingBtn=btn;
-        const u=new SpeechSynthesisUtterance('Hello! I can read your spelling words.');
-        u.voice=voice;u.rate=0.85;u.pitch=1.05;
-        u.onend=u.onerror=()=>{btn.classList.remove('playing');if(previewingBtn===btn)previewingBtn=null};
-        speechSynthesis.speak(u);
-      };
-
-      // Select
-      const selectFn=(e)=>{
-        e&&e.stopPropagation();
-        speechSynthesis.cancel();
-        selectedVoiceObj=voice;
-        saveVoice(activeChild,voice.name);
-        closeVoicePanel();
-        renderVoiceList(''); // refresh selection state for next open
-      };
-      item.querySelector('.voice-select-btn').onclick=selectFn;
-      item.onclick=selectFn;
-
-      list.appendChild(item);
-    });
-  });
-}
-
-document.getElementById('voice-search').addEventListener('input',function(){
-  renderVoiceList(this.value);
-});
-
-// Voices load asynchronously in some browsers
-if(speechSynthesis.onvoiceschanged!==undefined){
-  speechSynthesis.onvoiceschanged=()=>{};
-}
-
 // ── Select child ──────────────────────────────────────────
 function selectChild(child){
   activeChild=child;
   const cfg=CHILDREN[child];
-  // Apply theme
-  const testEl=document.getElementById('child');
-  testEl.className='screen '+cfg.theme;
+  document.getElementById('child').className='screen '+cfg.theme;
   document.getElementById('c-title').textContent=cfg.name+"'s Test!";
-  // Resolve voice for this child
-  // Wait a tick so voices are loaded
-  setTimeout(()=>{selectedVoiceObj=resolveVoice(child)},100);
-  // Theme results
   document.getElementById('r-score').style.color=cfg.scoreColor;
   document.getElementById('r-again').style.background=cfg.scoreColor;
-  document.getElementById('r-again').style.boxShadow=`0 3px 0 ${child==='jin'?'var(--jin-dark)':'var(--kei-dark)'}`;
+  document.getElementById('r-again').style.boxShadow=`0 3px 0 ${cfg.shadowColor}`;
   startTest();
 }
 
@@ -578,15 +376,21 @@ function loadWord(){
   setTimeout(speakWord,500);
 }
 
+function makeUtterance(text,rate=0.9,pitch=1.1){
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US';
+  if(usVoice)u.voice=usVoice;
+  u.rate=rate;u.pitch=pitch;u.volume=1;
+  return u;
+}
+
 function speakWord(){
   const word=queue[0];
   const hb=document.getElementById('hear-btn');
   hb.disabled=true;
   hb.innerHTML='🔊<span class="s-ring"><span class="s-dot"></span><span class="s-dot"></span><span class="s-dot"></span></span>';
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(word);
-  if(selectedVoiceObj)u.voice=selectedVoiceObj;
-  u.rate=0.78;u.pitch=1.05;u.volume=1;
+  const u=makeUtterance(word,0.78,1.05);
   u.onend=u.onerror=()=>{
     hb.innerHTML='🔊 Hear it again';hb.disabled=false;
     document.getElementById('wc-state').textContent='Now type your spelling below 👇';
@@ -620,11 +424,12 @@ function checkAnswer(){
   if(correct){
     const praise=randomPraise();
     fb.innerHTML=`<span class="fb-emoji">${praise.emoji}</span><span class="fb-title correct">${praise.text}</span><span class="fb-sub">"${word}" — perfectly spelled!</span>`;
-    speak(praise.speech);
+    speechSynthesis.cancel();
+    speechSynthesis.speak(makeUtterance(praise.speech));
   } else {
     const letters=word.toUpperCase().split('').join(' · ');
     fb.innerHTML=`<span class="fb-emoji">💪</span><span class="fb-title wrong">Not quite!</span><span class="fb-sub">You typed: <strong>${typed||'nothing'}</strong> — the correct spelling is:</span><span class="fb-spelling">${letters}</span><span class="fb-retry-note">🔄 This word will come back for another try!</span>`;
-    setTimeout(()=>speak(word,0.62),700);
+    setTimeout(()=>{speechSynthesis.cancel();speechSynthesis.speak(makeUtterance(word,0.62,1.0))},700);
   }
   document.getElementById('check-btn').style.display='none';
   const nb=document.getElementById('next-btn');
@@ -635,14 +440,6 @@ function checkAnswer(){
 function advance(){
   if(queue.length===0)showResults();
   else loadWord();
-}
-
-function speak(text,rate=0.9){
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  if(selectedVoiceObj)u.voice=selectedVoiceObj;
-  u.rate=rate;u.pitch=1.1;
-  speechSynthesis.speak(u);
 }
 
 function showResults(){
@@ -657,11 +454,8 @@ function showResults(){
   document.getElementById('r-title').textContent=(pct===1?'Perfect score! 🏆':pct>=0.8?'Amazing work! 🌟':pct>=0.6?'Great effort! 💪':'Keep practising! 🐝')+' '+cfg.emoji;
   document.getElementById('r-list').innerHTML=entries.map(([word,ok])=>`<div class="r-item ${ok?'ok':'bad'}"><span>${word}</span><span>${ok?'✅':'❌'}</span></div>`).join('');
   show('results');
-  setTimeout(()=>speak(
-    pct===1?`Amazing ${cfg.name}! Perfect score! You are a spelling superstar!`:
-    pct>=0.6?`Well done ${cfg.name}! You got ${correct} out of ${total} first time!`:
-    `You got ${correct} out of ${total}, ${cfg.name}. Keep practising, you can do it!`
-  ),400);
+  const msg=pct===1?`Amazing ${cfg.name}! Perfect score! You are a spelling superstar!`:pct>=0.6?`Well done ${cfg.name}! You got ${correct} out of ${total} first time!`:`You got ${correct} out of ${total}, ${cfg.name}. Keep practising, you can do it!`;
+  setTimeout(()=>{speechSynthesis.cancel();speechSynthesis.speak(makeUtterance(msg))},400);
 }
 
 // ── Boot ──────────────────────────────────────────────────
