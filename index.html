@@ -1,602 +1,989 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🐝 Spelling Bee Practice</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>🐝 Spelling Bee</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: #fffdf7;
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 2rem 1rem 4rem;
-      color: #222;
-    }
+:root{
+  --honey:#F5A623;
+  --honey-dark:#7A4F00;
+  --honey-light:#FEF3DC;
+  --honey-mid:#FAD07A;
+  --teal:#1D9E75;
+  --teal-dark:#085041;
+  --teal-light:#E1F5EE;
+  --coral:#E85A2A;
+  --coral-light:#FEF0EA;
+  --purple:#6C5CE7;
+  --purple-light:#F0EEFF;
+  --red:#E53E3E;
+  --red-light:#FFF0F0;
+  --green:#27AE60;
+  --green-light:#F0FFF4;
+  --gray:#6B7280;
+  --gray-light:#F9F9F7;
+  --border:#E5E0D5;
+  --white:#FFFFFF;
+  --text:#1A1A1A;
+  --text-muted:#888;
+}
 
-    .app {
-      max-width: 580px;
-      width: 100%;
-    }
+html,body{height:100%;overflow:hidden}
 
-    .header {
-      text-align: center;
-      margin-bottom: 1.75rem;
-    }
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--honey-light);
+  color:var(--text);
+  touch-action:manipulation;
+}
 
-    .bee-emoji {
-      font-size: 3rem;
-      display: inline-block;
-      animation: wobble 2s ease-in-out infinite;
-    }
+/* ── Screens ── */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
 
-    @keyframes wobble {
-      0%, 100% { transform: rotate(-6deg); }
-      50% { transform: rotate(6deg); }
-    }
+/* ── HOME SCREEN ── */
+#home{
+  align-items:center;
+  justify-content:center;
+  background:var(--honey-light);
+  gap:0;
+}
 
-    .header h1 {
-      font-family: 'Fredoka One', cursive;
-      font-size: 2.4rem;
-      color: #633806;
-      letter-spacing: 1px;
-      line-height: 1.1;
-      margin-top: 0.25rem;
-    }
+.home-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(245,166,35,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 20%, rgba(29,158,117,0.1) 0%, transparent 70%);
+  pointer-events:none;
+}
 
-    .header p {
-      font-size: 15px;
-      color: #888;
-      margin-top: 6px;
-    }
+.home-content{
+  position:relative;
+  text-align:center;
+  padding:2rem;
+  max-width:400px;
+  width:100%;
+}
 
-    .card {
-      background: #fff;
-      border: 1px solid #e8e4d8;
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
-    }
+.bee-big{font-size:5rem;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-12px) rotate(5deg)}}
 
-    .section-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.15rem;
-      color: #333;
-      margin-bottom: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+.home-title{
+  font-family:'Fredoka One',cursive;
+  font-size:3rem;
+  color:var(--honey-dark);
+  line-height:1;
+  margin:0.5rem 0 0.25rem;
+}
+.home-subtitle{font-size:1rem;color:var(--gray);margin-bottom:2.5rem}
 
-    .word-input-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 0.85rem;
-    }
+.role-cards{display:flex;flex-direction:column;gap:14px;width:100%}
 
-    .word-input-row input {
-      flex: 1;
-      font-family: 'Nunito', sans-serif;
-      font-size: 15px;
-      padding: 10px 14px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
+.role-card{
+  display:flex;align-items:center;gap:16px;
+  padding:1.1rem 1.4rem;
+  border-radius:20px;
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;
+  text-align:left;
+}
+.role-card:active{transform:scale(0.97)}
 
-    .word-input-row input:focus { border-color: #1D9E75; }
+.role-card.child{
+  background:var(--teal);
+  box-shadow:0 5px 0 var(--teal-dark);
+}
+.role-card.child:active{box-shadow:0 2px 0 var(--teal-dark);transform:translateY(3px)}
 
-    .add-btn {
-      background: #FAC775;
-      color: #633806;
-      border: none;
-      border-radius: 10px;
-      padding: 0 20px;
-      font-family: 'Fredoka One', cursive;
-      font-size: 15px;
-      cursor: pointer;
-      transition: transform 0.1s, opacity 0.1s;
-      white-space: nowrap;
-    }
-    .add-btn:hover { opacity: 0.85; }
-    .add-btn:active { transform: scale(0.96); }
+.role-card.parent{
+  background:var(--white);
+  border-color:var(--border);
+  box-shadow:0 3px 0 var(--border);
+}
+.role-card.parent:active{box-shadow:0 1px 0 var(--border);transform:translateY(2px)}
 
-    .word-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      min-height: 36px;
-    }
+.role-icon{font-size:2.2rem;line-height:1}
+.role-info{}
+.role-name{font-family:'Fredoka One',cursive;font-size:1.3rem;display:block}
+.role-desc{font-size:0.82rem;opacity:0.8}
+.role-card.child .role-name,.role-card.child .role-desc{color:#fff}
+.role-card.parent .role-name{color:var(--honey-dark)}
+.role-card.parent .role-desc{color:var(--gray)}
 
-    .chip {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: #EEEDFE;
-      color: #3C3489;
-      border-radius: 20px;
-      padding: 5px 14px 5px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      animation: popin 0.2s cubic-bezier(.4,1.6,.6,1);
-    }
+/* ── PARENT PIN ── */
+#pin-screen{
+  align-items:center;justify-content:center;
+  background:var(--honey-light);
+}
+.pin-box{
+  background:var(--white);
+  border-radius:24px;
+  border:1px solid var(--border);
+  padding:2rem 2rem 2.5rem;
+  width:90%;max-width:360px;
+  text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,0.06);
+}
+.pin-icon{font-size:2.5rem;margin-bottom:0.5rem}
+.pin-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--honey-dark);margin-bottom:0.25rem}
+.pin-sub{font-size:0.85rem;color:var(--gray);margin-bottom:1.5rem}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:1.25rem}
+.pin-dot{
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--border);
+  background:transparent;
+  transition:background 0.2s,border-color 0.2s;
+}
+.pin-dot.filled{background:var(--honey);border-color:var(--honey)}
+.pin-error{color:var(--red);font-size:0.82rem;min-height:1rem;margin-bottom:0.5rem}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto}
+.num-btn{
+  padding:0.9rem;border:1px solid var(--border);border-radius:14px;
+  font-family:'Fredoka One',cursive;font-size:1.4rem;
+  background:var(--white);cursor:pointer;
+  transition:background 0.1s,transform 0.1s;
+  color:var(--text);
+}
+.num-btn:active{background:var(--honey-light);transform:scale(0.93)}
+.num-btn.del{font-size:1.1rem;color:var(--gray)}
+.num-btn.empty{visibility:hidden}
+.back-link{
+  display:inline-block;margin-top:1.25rem;
+  font-size:0.85rem;color:var(--gray);cursor:pointer;
+  text-decoration:underline;
+}
 
-    @keyframes popin {
-      from { transform: scale(0.5); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+/* ── PARENT SCREEN ── */
+#parent{background:var(--gray-light)}
 
-    .chip-remove {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #7F77DD;
-      font-size: 17px;
-      line-height: 1;
-      padding: 0;
-      opacity: 0.6;
-      transition: opacity 0.15s;
-    }
-    .chip-remove:hover { opacity: 1; }
+.parent-header{
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:1rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.parent-header h1{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--honey-dark)}
+.parent-header p{font-size:0.78rem;color:var(--gray)}
+.logout-btn{
+  background:none;border:1px solid var(--border);border-radius:10px;
+  padding:6px 14px;font-size:0.82rem;font-family:'Nunito',sans-serif;
+  color:var(--gray);cursor:pointer;
+}
 
-    .empty-hint {
-      font-size: 13px;
-      color: #aaa;
-      font-style: italic;
-      align-self: center;
-    }
+.parent-body{flex:1;overflow-y:auto;padding:1.25rem}
 
-    .start-section {
-      text-align: center;
-      margin: 0.5rem 0 1.5rem;
-    }
+.parent-section{
+  background:var(--white);border-radius:16px;
+  border:1px solid var(--border);
+  padding:1.25rem;margin-bottom:1rem;
+}
+.parent-section h2{
+  font-family:'Fredoka One',cursive;font-size:1.05rem;
+  color:var(--text);margin-bottom:0.85rem;
+  display:flex;align-items:center;gap:6px;
+}
 
-    .start-btn {
-      background: #1D9E75;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 14px 44px;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.3rem;
-      cursor: pointer;
-      transition: transform 0.1s, opacity 0.1s, box-shadow 0.1s;
-      box-shadow: 0 4px 0 #085041;
-    }
-    .start-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-    .start-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #085041; }
-    .start-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+.add-row{display:flex;gap:8px;margin-bottom:0.85rem}
+.add-row input{
+  flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:12px;
+  font-family:'Nunito',sans-serif;font-size:15px;outline:none;
+  transition:border-color 0.15s;
+}
+.add-row input:focus{border-color:var(--teal)}
+.add-word-btn{
+  background:var(--honey);color:var(--honey-dark);border:none;
+  border-radius:12px;padding:0 18px;
+  font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;
+  white-space:nowrap;transition:opacity 0.15s;
+}
+.add-word-btn:hover{opacity:0.85}
 
-    .start-hint {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #aaa;
-    }
+.word-list{display:flex;flex-direction:column;gap:6px;min-height:32px}
+.word-item{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--honey-light);border-radius:10px;
+  padding:9px 14px;
+  animation:popin 0.2s cubic-bezier(.4,1.6,.6,1);
+}
+@keyframes popin{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+.word-item span{font-size:15px;font-weight:700;color:var(--honey-dark)}
+.del-btn{
+  background:none;border:none;cursor:pointer;
+  font-size:1.1rem;color:var(--coral);opacity:0.6;
+  transition:opacity 0.15s;padding:2px 6px;
+}
+.del-btn:hover{opacity:1}
+.word-empty{font-size:13px;color:var(--text-muted);font-style:italic}
 
-    .practice-card {
-      background: #fff;
-      border: 1px solid #e8e4d8;
-      border-radius: 16px;
-      padding: 1.5rem;
-      text-align: center;
-      display: none;
-    }
+.pin-change-row{display:flex;align-items:center;gap:10px}
+.pin-input{
+  width:110px;padding:9px 12px;border:1px solid var(--border);
+  border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;
+  letter-spacing:4px;outline:none;
+}
+.pin-input:focus{border-color:var(--teal)}
+.save-pin-btn{
+  background:var(--teal);color:#fff;border:none;border-radius:10px;
+  padding:9px 18px;font-family:'Fredoka One',cursive;font-size:0.95rem;
+  cursor:pointer;transition:opacity 0.15s;
+}
+.save-pin-btn:hover{opacity:0.85}
+.pin-saved{font-size:12px;color:var(--teal);display:none;margin-left:4px}
 
-    .practice-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.15rem;
-      color: #333;
-      margin-bottom: 1rem;
-    }
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat-box{
+  background:var(--gray-light);border-radius:12px;
+  padding:0.9rem;text-align:center;
+}
+.stat-num{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--honey-dark);line-height:1}
+.stat-label{font-size:11px;color:var(--gray);margin-top:2px}
 
-    .word-display {
-      background: #FAEEDA;
-      border-radius: 14px;
-      padding: 2rem 1rem;
-      margin-bottom: 1rem;
-      min-height: 130px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: background 0.3s;
-    }
+.clear-stats-btn{
+  margin-top:10px;background:none;border:1px solid var(--border);
+  border-radius:10px;padding:7px 14px;font-size:12px;color:var(--gray);
+  cursor:pointer;font-family:'Nunito',sans-serif;
+}
 
-    .word-display.idle { background: #f5f5f0; }
+/* ── CHILD TEST SCREEN ── */
+#child{background:var(--honey-light);position:relative}
 
-    .word-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #aaa;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+.child-header{
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:0.85rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.child-header .bee{font-size:1.6rem}
+.child-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--honey-dark)}
+.progress-pill{
+  background:var(--honey-light);border-radius:20px;padding:4px 12px;
+  font-size:0.82rem;font-weight:700;color:var(--honey-dark);
+}
 
-    .current-word {
-      font-family: 'Fredoka One', cursive;
-      font-size: 3.2rem;
-      color: #633806;
-      letter-spacing: 2px;
-      animation: fadeUp 0.3s ease;
-    }
+.child-body{
+  flex:1;display:flex;flex-direction:column;
+  padding:1rem;gap:0.75rem;
+  overflow:hidden;
+}
 
-    @keyframes fadeUp {
-      from { transform: translateY(10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+/* Word prompt area */
+.word-prompt{
+  background:var(--white);border-radius:16px;border:1px solid var(--border);
+  padding:1rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.word-prompt-left{}
+.prompt-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px}
+.prompt-state{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--text);margin-top:2px}
+.hear-btn{
+  background:var(--teal);color:#fff;border:none;border-radius:14px;
+  padding:10px 18px;font-family:'Fredoka One',cursive;font-size:1rem;
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:opacity 0.15s,transform 0.1s;flex-shrink:0;
+}
+.hear-btn:active{transform:scale(0.95)}
+.hear-btn:disabled{opacity:0.4;cursor:not-allowed}
 
-    .word-placeholder {
-      font-size: 1rem;
-      color: #aaa;
-      font-style: italic;
-    }
+/* Canvas area */
+.canvas-wrap{
+  flex:1;position:relative;
+  background:var(--white);border-radius:20px;border:2px solid var(--border);
+  overflow:hidden;min-height:0;
+}
+.write-canvas{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.canvas-lines{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(
+    transparent, transparent 47px, #E8E8E8 47px, #E8E8E8 48px
+  );
+  background-position:0 24px;
+}
+.canvas-hint{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Fredoka One',cursive;font-size:1.3rem;color:#DDD;
+  pointer-events:none;text-align:center;line-height:1.4;
+  transition:opacity 0.3s;
+}
 
-    .spelling-reveal {
-      font-size: 1.3rem;
-      letter-spacing: 8px;
-      color: #085041;
-      font-weight: 700;
-      animation: fadeUp 0.3s ease;
-    }
+/* Result overlay */
+.result-overlay{
+  position:absolute;inset:0;
+  display:none;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:12px;border-radius:18px;
+}
+.result-overlay.correct{background:rgba(39,174,96,0.92)}
+.result-overlay.wrong{background:rgba(229,62,62,0.92)}
+.result-emoji{font-size:4rem;animation:bounce 0.5s cubic-bezier(.4,1.7,.6,1)}
+@keyframes bounce{from{transform:scale(0.3)}to{transform:scale(1)}}
+.result-word{font-family:'Fredoka One',cursive;font-size:2.2rem;color:#fff}
+.result-label{font-size:1rem;color:rgba(255,255,255,0.9)}
+.result-correct-spell{
+  font-family:'Fredoka One',cursive;font-size:1.5rem;
+  color:#fff;background:rgba(0,0,0,0.2);
+  padding:6px 20px;border-radius:30px;letter-spacing:2px;
+}
 
-    .speak-btn {
-      background: #1D9E75;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 12px 32px;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: opacity 0.1s, transform 0.1s;
-      margin-bottom: 0.75rem;
-    }
-    .speak-btn:hover:not(:disabled) { opacity: 0.85; }
-    .speak-btn:active:not(:disabled) { transform: scale(0.97); }
-    .speak-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* Bottom controls */
+.child-controls{
+  display:flex;gap:10px;flex-shrink:0;
+}
+.clear-btn{
+  background:var(--white);color:var(--gray);border:1px solid var(--border);
+  border-radius:14px;padding:12px 18px;
+  font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;
+  transition:background 0.15s;flex-shrink:0;
+}
+.clear-btn:active{background:var(--gray-light)}
+.submit-btn{
+  flex:1;background:var(--honey);color:var(--honey-dark);border:none;
+  border-radius:14px;padding:14px;
+  font-family:'Fredoka One',cursive;font-size:1.15rem;cursor:pointer;
+  box-shadow:0 4px 0 #C07800;
+  transition:transform 0.1s,box-shadow 0.1s,opacity 0.15s;
+}
+.submit-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #C07800}
+.submit-btn:disabled{opacity:0.35;cursor:not-allowed;box-shadow:none}
+.next-word-btn{
+  flex:1;background:var(--teal);color:#fff;border:none;
+  border-radius:14px;padding:14px;
+  font-family:'Fredoka One',cursive;font-size:1.15rem;cursor:pointer;
+  box-shadow:0 4px 0 var(--teal-dark);
+  transition:transform 0.1s,box-shadow 0.1s;
+}
+.next-word-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-dark)}
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 0.75rem;
-    }
+/* ── RESULTS SCREEN ── */
+#results{
+  align-items:center;justify-content:center;
+  background:var(--honey-light);
+}
+.results-box{
+  background:var(--white);border-radius:24px;border:1px solid var(--border);
+  padding:2rem;width:92%;max-width:420px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.07);
+}
+.results-box h2{
+  font-family:'Fredoka One',cursive;font-size:1.8rem;
+  color:var(--honey-dark);text-align:center;margin-bottom:0.25rem;
+}
+.results-score{
+  text-align:center;font-family:'Fredoka One',cursive;
+  font-size:3.5rem;color:var(--teal);margin:0.5rem 0 1rem;
+}
+.results-score span{font-size:1.5rem;color:var(--gray)}
+.results-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;max-height:220px;overflow-y:auto}
+.result-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 14px;border-radius:12px;font-weight:700;font-size:14px;
+}
+.result-item.ok{background:var(--green-light);color:var(--green)}
+.result-item.bad{background:var(--red-light);color:var(--red)}
+.result-item .ri-word{font-size:15px}
+.result-item .ri-icon{font-size:1.1rem}
+.results-actions{display:flex;gap:10px}
+.try-again-btn{
+  flex:1;background:var(--teal);color:#fff;border:none;border-radius:14px;
+  padding:13px;font-family:'Fredoka One',cursive;font-size:1.05rem;cursor:pointer;
+  box-shadow:0 3px 0 var(--teal-dark);
+}
+.home-btn{
+  background:var(--white);color:var(--gray);border:1px solid var(--border);
+  border-radius:14px;padding:13px 18px;font-family:'Fredoka One',cursive;
+  font-size:1.05rem;cursor:pointer;
+}
 
-    .reveal-btn {
-      background: #7F77DD;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 10px 22px;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: opacity 0.1s, transform 0.1s;
-    }
-    .reveal-btn:hover:not(:disabled) { opacity: 0.85; }
-    .reveal-btn:active:not(:disabled) { transform: scale(0.97); }
-    .reveal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* ── Loading spinner ── */
+.spinner{
+  width:22px;height:22px;border-radius:50%;
+  border:3px solid rgba(255,255,255,0.4);
+  border-top-color:#fff;
+  animation:spin 0.7s linear infinite;
+  display:inline-block;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    .next-btn {
-      background: #D85A30;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 10px 24px;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: opacity 0.1s, transform 0.1s;
-    }
-    .next-btn:hover:not(:disabled) { opacity: 0.85; }
-    .next-btn:active:not(:disabled) { transform: scale(0.97); }
-    .next-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .counter {
-      font-size: 13px;
-      font-weight: 700;
-      color: #aaa;
-      margin-bottom: 0.75rem;
-    }
-
-    .back-btn {
-      background: none;
-      border: 1px solid #ddd;
-      border-radius: 50px;
-      padding: 7px 18px;
-      font-family: 'Fredoka One', cursive;
-      font-size: 0.95rem;
-      cursor: pointer;
-      color: #999;
-      transition: background 0.15s;
-    }
-    .back-btn:hover { background: #f5f5f0; }
-
-    .done-card {
-      background: #E1F5EE;
-      border-radius: 16px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      display: none;
-      animation: fadeUp 0.4s ease;
-    }
-
-    .done-card h2 {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.8rem;
-      color: #085041;
-      margin-bottom: 8px;
-    }
-
-    .done-card p {
-      font-size: 14px;
-      color: #0F6E56;
-      margin-bottom: 1.25rem;
-    }
-
-    .speaking-dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #fff;
-      animation: pulse 0.8s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.5); }
-    }
-
-    @media (max-width: 480px) {
-      .header h1 { font-size: 2rem; }
-      .current-word { font-size: 2.5rem; }
-    }
-  </style>
+/* ── No-words overlay ── */
+.no-words-msg{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;
+  background:var(--honey-light);
+}
+.no-words-msg span{font-size:3rem}
+.no-words-msg p{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--honey-dark);text-align:center;padding:0 2rem}
+.no-words-msg small{font-size:0.85rem;color:var(--gray)}
+</style>
 </head>
 <body>
-<div class="app">
 
-  <div class="header">
-    <div class="bee-emoji">🐝</div>
-    <h1>Spelling Bee Practice</h1>
-    <p>Add your spelling words, then practice out loud!</p>
-  </div>
-
-  <div class="card" id="setup-section">
-    <div class="section-title">📋 Your word list</div>
-    <div class="word-input-row">
-      <input type="text" id="word-input" placeholder="Type a word and press Enter..." maxlength="30" />
-      <button class="add-btn" onclick="addWord()">Add ➕</button>
-    </div>
-    <div class="word-chips" id="word-chips">
-      <span class="empty-hint" id="empty-hint">No words yet — add some above!</span>
-    </div>
-  </div>
-
-  <div class="start-section" id="start-section">
-    <button class="start-btn" id="start-btn" onclick="startPractice()" disabled>
-      Start Practice! 🚀
-    </button>
-    <div class="start-hint" id="start-hint">Add at least 1 word to begin</div>
-  </div>
-
-  <div class="practice-card" id="practice-section">
-    <div class="practice-title">🎧 Practice time!</div>
-
-    <div class="word-display idle" id="word-display">
-      <span class="word-placeholder">Press "Say it!" to hear a word 🎧</span>
-    </div>
-
-    <button class="speak-btn" id="speak-btn" onclick="speakWord()">
-      🔊 Say it!
-    </button>
-
-    <div class="controls">
-      <button class="reveal-btn" id="reveal-btn" onclick="revealSpelling()" disabled>
-        👁 Show spelling
-      </button>
-      <button class="next-btn" id="next-btn" onclick="nextWord()">
-        Next word ➡
-      </button>
-    </div>
-
-    <div class="counter" id="counter"></div>
-    <button class="back-btn" onclick="restartSetup()">← Back to word list</button>
-  </div>
-
-  <div class="done-card" id="done-section">
-    <h2>🎉 Amazing job!</h2>
-    <p>You went through all your words. Keep practicing to become a spelling champion!</p>
-    <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-      <button class="speak-btn" style="margin:0;" onclick="restartPractice()">
-        🔁 Practice again
-      </button>
-      <button class="back-btn" onclick="restartSetup()">← Change word list</button>
+<!-- ══ HOME ══ -->
+<div class="screen active" id="home">
+  <div class="home-bg"></div>
+  <div class="home-content">
+    <span class="bee-big">🐝</span>
+    <h1 class="home-title">Spelling Bee</h1>
+    <p class="home-subtitle">Who's practicing today?</p>
+    <div class="role-cards">
+      <div class="role-card child" onclick="startChild()">
+        <div class="role-icon">👧</div>
+        <div class="role-info">
+          <span class="role-name">I'm the student!</span>
+          <span class="role-desc">Take the spelling test</span>
+        </div>
+      </div>
+      <div class="role-card parent" onclick="showPin()">
+        <div class="role-icon">👨‍👩‍👧</div>
+        <div class="role-info">
+          <span class="role-name">Parent / Teacher</span>
+          <span class="role-desc">Manage words & settings</span>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 
+<!-- ══ PIN SCREEN ══ -->
+<div class="screen" id="pin-screen">
+  <div class="pin-box">
+    <div class="pin-icon">🔐</div>
+    <div class="pin-title">Parent Login</div>
+    <div class="pin-sub">Enter your 4-digit PIN</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+    <div class="numpad">
+      <button class="num-btn" onclick="pinKey('1')">1</button>
+      <button class="num-btn" onclick="pinKey('2')">2</button>
+      <button class="num-btn" onclick="pinKey('3')">3</button>
+      <button class="num-btn" onclick="pinKey('4')">4</button>
+      <button class="num-btn" onclick="pinKey('5')">5</button>
+      <button class="num-btn" onclick="pinKey('6')">6</button>
+      <button class="num-btn" onclick="pinKey('7')">7</button>
+      <button class="num-btn" onclick="pinKey('8')">8</button>
+      <button class="num-btn" onclick="pinKey('9')">9</button>
+      <button class="num-btn empty"></button>
+      <button class="num-btn" onclick="pinKey('0')">0</button>
+      <button class="num-btn del" onclick="pinDel()">⌫</button>
+    </div>
+    <div class="back-link" onclick="goHome()">← Back</div>
+  </div>
+</div>
+
+<!-- ══ PARENT SCREEN ══ -->
+<div class="screen" id="parent">
+  <div class="parent-header">
+    <div>
+      <h1>🐝 Parent Dashboard</h1>
+      <p>Manage spelling words & settings</p>
+    </div>
+    <button class="logout-btn" onclick="goHome()">🔒 Lock</button>
+  </div>
+  <div class="parent-body">
+
+    <div class="parent-section">
+      <h2>📋 Spelling Words</h2>
+      <div class="add-row">
+        <input type="text" id="parent-word-input" placeholder="Add a word..." maxlength="30"/>
+        <button class="add-word-btn" onclick="parentAddWord()">Add ➕</button>
+      </div>
+      <div class="word-list" id="parent-word-list"></div>
+    </div>
+
+    <div class="parent-section">
+      <h2>📊 Results</h2>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-label">Tests taken</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-correct" style="color:var(--green)">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-wrong" style="color:var(--red)">0</div>
+          <div class="stat-label">Wrong</div>
+        </div>
+      </div>
+      <button class="clear-stats-btn" onclick="clearStats()">Clear stats</button>
+    </div>
+
+    <div class="parent-section">
+      <h2>🔐 Change PIN</h2>
+      <div class="pin-change-row">
+        <input class="pin-input" type="password" maxlength="4" inputmode="numeric"
+               id="new-pin-input" placeholder="••••"/>
+        <button class="save-pin-btn" onclick="savePin()">Save</button>
+        <span class="pin-saved" id="pin-saved">✓ Saved!</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ CHILD TEST ══ -->
+<div class="screen" id="child">
+  <div class="child-header">
+    <span class="bee">🐝</span>
+    <span class="child-title">Spelling Test!</span>
+    <div class="progress-pill" id="progress-pill">0 / 0</div>
+  </div>
+  <div class="child-body">
+    <div class="word-prompt">
+      <div class="word-prompt-left">
+        <div class="prompt-label">Listen, then write</div>
+        <div class="prompt-state" id="prompt-state">Press 🔊 to hear your word</div>
+      </div>
+      <button class="hear-btn" id="hear-btn" onclick="speakCurrent()">🔊 Hear it</button>
+    </div>
+
+    <div class="canvas-wrap" id="canvas-wrap">
+      <div class="canvas-lines"></div>
+      <canvas class="write-canvas" id="write-canvas"></canvas>
+      <div class="canvas-hint" id="canvas-hint">✏️ Write your answer here</div>
+      <div class="result-overlay" id="result-overlay">
+        <div class="result-emoji" id="result-emoji"></div>
+        <div class="result-word" id="result-word"></div>
+        <div class="result-label" id="result-label"></div>
+        <div class="result-correct-spell" id="result-correct-spell" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="child-controls" id="child-controls">
+      <button class="clear-btn" id="clear-btn" onclick="clearCanvas()">🗑 Clear</button>
+      <button class="submit-btn" id="submit-btn" onclick="submitAnswer()" disabled>✅ Check it!</button>
+    </div>
+  </div>
+
+  <div class="no-words-msg" id="no-words-msg" style="display:none">
+    <span>📭</span>
+    <p>No words yet!</p>
+    <small>Ask a parent or teacher to add words first.</small>
+    <button class="home-btn" style="margin-top:10px" onclick="goHome()">← Home</button>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div class="screen" id="results">
+  <div class="results-box">
+    <h2 id="results-title">Test Complete! 🎉</h2>
+    <div class="results-score"><span>Score: </span><span id="score-num">0</span>/<span id="score-den">0</span></div>
+    <div class="results-list" id="results-list"></div>
+    <div class="results-actions">
+      <button class="home-btn" onclick="goHome()">🏠 Home</button>
+      <button class="try-again-btn" onclick="startChild()">🔁 Try Again</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  let words = [];
-  let shuffled = [];
-  let currentIndex = 0;
-  let currentWord = null;
-  let isSpeaking = false;
-  let revealed = false;
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+const STORE = {
+  get words(){ return JSON.parse(localStorage.getItem('bee_words')||'[]') },
+  set words(v){ localStorage.setItem('bee_words', JSON.stringify(v)) },
+  get pin(){ return localStorage.getItem('bee_pin')||'1234' },
+  set pin(v){ localStorage.setItem('bee_pin', v) },
+  get stats(){ return JSON.parse(localStorage.getItem('bee_stats')||'{"total":0,"correct":0,"wrong":0}') },
+  set stats(v){ localStorage.setItem('bee_stats', JSON.stringify(v)) }
+};
 
-  const wordInput = document.getElementById('word-input');
-  const chipsEl = document.getElementById('word-chips');
-  const emptyHint = document.getElementById('empty-hint');
-  const startBtn = document.getElementById('start-btn');
-  const startHint = document.getElementById('start-hint');
-  const setupSection = document.getElementById('setup-section');
-  const startSection = document.getElementById('start-section');
-  const practiceSection = document.getElementById('practice-section');
-  const doneSection = document.getElementById('done-section');
-  const wordDisplay = document.getElementById('word-display');
-  const speakBtn = document.getElementById('speak-btn');
-  const nextBtn = document.getElementById('next-btn');
-  const revealBtn = document.getElementById('reveal-btn');
-  const counter = document.getElementById('counter');
+let testWords = [];
+let testIdx = 0;
+let testResults = [];
+let hasDrawn = false;
+let isJudging = false;
+let showingResult = false;
 
-  wordInput.addEventListener('keydown', e => { if (e.key === 'Enter') addWord(); });
+// ═══════════════════════════════
+// SCREEN ROUTING
+// ═══════════════════════════════
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome(){ show('home'); window.speechSynthesis.cancel(); }
 
-  function addWord() {
-    const val = wordInput.value.trim().toLowerCase();
-    if (!val || words.includes(val)) { wordInput.value = ''; return; }
-    words.push(val);
-    wordInput.value = '';
-    renderChips();
-    updateStartBtn();
-    wordInput.focus();
+// ═══════════════════════════════
+// PIN / PARENT
+// ═══════════════════════════════
+let pinEntry = '';
+function showPin(){
+  pinEntry = '';
+  updatePinDots();
+  document.getElementById('pin-error').textContent = '';
+  show('pin-screen');
+}
+function pinKey(k){
+  if(pinEntry.length >= 4) return;
+  pinEntry += k;
+  updatePinDots();
+  if(pinEntry.length === 4) checkPin();
+}
+function pinDel(){
+  pinEntry = pinEntry.slice(0,-1);
+  updatePinDots();
+  document.getElementById('pin-error').textContent = '';
+}
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    document.getElementById('d'+i).classList.toggle('filled', i < pinEntry.length);
   }
-
-  function removeWord(w) {
-    words = words.filter(x => x !== w);
-    renderChips();
-    updateStartBtn();
+}
+function checkPin(){
+  if(pinEntry === STORE.pin){
+    renderParent();
+    show('parent');
+  } else {
+    document.getElementById('pin-error').textContent = '❌ Wrong PIN, try again';
+    pinEntry = '';
+    updatePinDots();
   }
+}
+function renderParent(){
+  const words = STORE.words;
+  const list = document.getElementById('parent-word-list');
+  list.innerHTML = words.length ? '' : '<div class="word-empty">No words yet — add some!</div>';
+  words.forEach((w,i) => {
+    const d = document.createElement('div');
+    d.className = 'word-item';
+    d.innerHTML = `<span>${w}</span><button class="del-btn" onclick="parentDelWord(${i})">🗑</button>`;
+    list.appendChild(d);
+  });
+  const s = STORE.stats;
+  document.getElementById('stat-total').textContent = s.total;
+  document.getElementById('stat-correct').textContent = s.correct;
+  document.getElementById('stat-wrong').textContent = s.wrong;
+}
+function parentAddWord(){
+  const inp = document.getElementById('parent-word-input');
+  const val = inp.value.trim().toLowerCase();
+  if(!val) return;
+  const words = STORE.words;
+  if(!words.includes(val)){ words.push(val); STORE.words = words; }
+  inp.value = '';
+  renderParent();
+  inp.focus();
+}
+function parentDelWord(i){
+  const words = STORE.words;
+  words.splice(i,1);
+  STORE.words = words;
+  renderParent();
+}
+function savePin(){
+  const v = document.getElementById('new-pin-input').value;
+  if(!/^\d{4}$/.test(v)){ alert('PIN must be exactly 4 digits'); return; }
+  STORE.pin = v;
+  document.getElementById('new-pin-input').value = '';
+  const saved = document.getElementById('pin-saved');
+  saved.style.display = 'inline';
+  setTimeout(()=>saved.style.display='none', 2000);
+}
+function clearStats(){
+  STORE.stats = {total:0,correct:0,wrong:0};
+  renderParent();
+}
+document.getElementById('parent-word-input').addEventListener('keydown', e=>{ if(e.key==='Enter') parentAddWord(); });
 
-  function renderChips() {
-    chipsEl.innerHTML = '';
-    if (words.length === 0) {
-      chipsEl.appendChild(emptyHint);
-      return;
-    }
-    words.forEach(w => {
-      const chip = document.createElement('div');
-      chip.className = 'chip';
-      chip.innerHTML = w + ' <button class="chip-remove" onclick="removeWord(\'' + w + '\')" aria-label="Remove ' + w + '">×</button>';
-      chipsEl.appendChild(chip);
+// ═══════════════════════════════
+// CHILD TEST
+// ═══════════════════════════════
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function startChild(){
+  const words = STORE.words;
+  if(!words.length){
+    show('child');
+    document.getElementById('no-words-msg').style.display = 'flex';
+    return;
+  }
+  document.getElementById('no-words-msg').style.display = 'none';
+  testWords = shuffle(words);
+  testIdx = 0;
+  testResults = [];
+  show('child');
+  initCanvas();
+  loadWord();
+}
+
+function loadWord(){
+  showingResult = false;
+  const overlay = document.getElementById('result-overlay');
+  overlay.style.display = 'none';
+  overlay.className = 'result-overlay';
+  clearCanvas();
+  document.getElementById('progress-pill').textContent = `${testIdx+1} / ${testWords.length}`;
+  document.getElementById('prompt-state').textContent = 'Press 🔊 to hear your word';
+  document.getElementById('hear-btn').disabled = false;
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').textContent = '✅ Check it!';
+  document.getElementById('child-controls').style.display = 'flex';
+  document.getElementById('canvas-hint').style.opacity = '1';
+
+  // auto-speak after short delay
+  setTimeout(speakCurrent, 600);
+}
+
+function speakCurrent(){
+  const word = testWords[testIdx];
+  const btn = document.getElementById('hear-btn');
+  btn.disabled = true;
+  btn.textContent = '🔊 ...';
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.rate = 0.8; u.pitch = 1.05;
+  u.onend = ()=>{ btn.textContent='🔊 Hear again'; btn.disabled=false; };
+  window.speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════
+// CANVAS
+// ═══════════════════════════════
+let ctx, drawing = false, lastX, lastY;
+
+function initCanvas(){
+  const canvas = document.getElementById('write-canvas');
+  const wrap = document.getElementById('canvas-wrap');
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  ctx = canvas.getContext('2d');
+  ctx.strokeStyle = '#1A1A1A';
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  hasDrawn = false;
+
+  // Touch
+  canvas.addEventListener('touchstart', e=>{ e.preventDefault(); const t=e.touches[0]; startDraw(t.clientX, t.clientY, canvas); }, {passive:false});
+  canvas.addEventListener('touchmove',  e=>{ e.preventDefault(); const t=e.touches[0]; draw(t.clientX, t.clientY, canvas); }, {passive:false});
+  canvas.addEventListener('touchend',   e=>{ e.preventDefault(); stopDraw(); }, {passive:false});
+  // Mouse
+  canvas.addEventListener('mousedown',  e=>startDraw(e.clientX, e.clientY, canvas));
+  canvas.addEventListener('mousemove',  e=>draw(e.clientX, e.clientY, canvas));
+  canvas.addEventListener('mouseup',    stopDraw);
+  canvas.addEventListener('mouseleave', stopDraw);
+}
+
+function getPos(clientX, clientY, canvas){
+  const r = canvas.getBoundingClientRect();
+  return { x:(clientX-r.left)*(canvas.width/r.width), y:(clientY-r.top)*(canvas.height/r.height) };
+}
+
+function startDraw(cx,cy,canvas){
+  if(showingResult) return;
+  drawing = true;
+  const p = getPos(cx,cy,canvas);
+  lastX=p.x; lastY=p.y;
+  ctx.beginPath();
+  ctx.arc(lastX,lastY,2,0,Math.PI*2);
+  ctx.fillStyle='#1A1A1A';
+  ctx.fill();
+  document.getElementById('canvas-hint').style.opacity = '0';
+  hasDrawn = true;
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function draw(cx,cy,canvas){
+  if(!drawing) return;
+  const p = getPos(cx,cy,canvas);
+  ctx.beginPath();
+  ctx.moveTo(lastX,lastY);
+  ctx.lineTo(p.x,p.y);
+  ctx.stroke();
+  lastX=p.x; lastY=p.y;
+}
+
+function stopDraw(){ drawing=false; }
+
+function clearCanvas(){
+  if(!ctx) return;
+  const canvas = document.getElementById('write-canvas');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  hasDrawn = false;
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('canvas-hint').style.opacity = '1';
+}
+
+// ═══════════════════════════════
+// AI JUDGING via Anthropic API
+// ═══════════════════════════════
+async function submitAnswer(){
+  if(!hasDrawn || isJudging) return;
+  isJudging = true;
+
+  const btn = document.getElementById('submit-btn');
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled = true;
+  document.getElementById('clear-btn').disabled = true;
+  document.getElementById('hear-btn').disabled = true;
+
+  const canvas = document.getElementById('write-canvas');
+  const imageData = canvas.toDataURL('image/png').split(',')[1];
+  const word = testWords[testIdx];
+
+  let isCorrect = false;
+  let recognised = '?';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:100,
+        messages:[{
+          role:'user',
+          content:[
+            {
+              type:'image',
+              source:{type:'base64', media_type:'image/png', data:imageData}
+            },
+            {
+              type:'text',
+              text:`This is a child's handwritten answer on a spelling test. The word they were asked to spell is: "${word}".
+
+Read the handwriting carefully. Then respond with ONLY a JSON object, nothing else:
+{"recognised":"<what you read>","correct":true/false}
+
+Be generous with letter formation — a child wrote this. Only mark correct:false if they clearly wrote the wrong letters. Ignore capitalisation.`
+            }
+          ]
+        }]
+      })
     });
+    const data = await resp.json();
+    const text = data.content.map(b=>b.text||'').join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    isCorrect = parsed.correct;
+    recognised = parsed.recognised || '?';
+  } catch(e){
+    // Fallback: simple canvas → text not possible; show error state
+    isCorrect = false;
+    recognised = '(could not read)';
   }
 
-  function updateStartBtn() {
-    startBtn.disabled = words.length === 0;
-    startHint.textContent = words.length === 0
-      ? 'Add at least 1 word to begin'
-      : words.length + ' word' + (words.length > 1 ? 's' : '') + ' ready!';
+  isJudging = false;
+  showingResult = true;
+  document.getElementById('clear-btn').disabled = false;
+
+  // Record result
+  testResults.push({ word, correct: isCorrect, recognised });
+  const s = STORE.stats;
+  s.total++;
+  if(isCorrect) s.correct++; else s.wrong++;
+  STORE.stats = s;
+
+  // Show overlay
+  const overlay = document.getElementById('result-overlay');
+  overlay.style.display = 'flex';
+  overlay.className = 'result-overlay ' + (isCorrect ? 'correct' : 'wrong');
+  document.getElementById('result-emoji').textContent = isCorrect ? '🌟' : '💪';
+  document.getElementById('result-word').textContent = isCorrect ? 'Correct!' : 'Not quite...';
+  document.getElementById('result-label').textContent = isCorrect
+    ? `"${word}" — well done!`
+    : `You wrote: "${recognised}"`;
+
+  const spell = document.getElementById('result-correct-spell');
+  if(!isCorrect){
+    spell.textContent = word.toUpperCase().split('').join(' · ');
+    spell.style.display = 'block';
+    // Speak the word again slowly
+    setTimeout(()=>{
+      const u = new SpeechSynthesisUtterance(word);
+      u.rate = 0.6; u.pitch = 1.0;
+      window.speechSynthesis.speak(u);
+    }, 700);
+  } else {
+    spell.style.display = 'none';
+    // Praise
+    setTimeout(()=>{
+      const u = new SpeechSynthesisUtterance('Correct! Great job!');
+      u.rate = 0.9; u.pitch = 1.2;
+      window.speechSynthesis.speak(u);
+    }, 300);
   }
 
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
+  // Swap buttons
+  const controls = document.getElementById('child-controls');
+  controls.innerHTML = '';
+  const isLast = testIdx >= testWords.length - 1;
+  const nb = document.createElement('button');
+  nb.className = 'next-word-btn';
+  nb.textContent = isLast ? '🏁 See Results' : '➡ Next Word';
+  nb.onclick = isLast ? showResults : advanceWord;
+  controls.appendChild(nb);
+}
 
-  function startPractice() {
-    shuffled = shuffle(words);
-    currentIndex = 0;
-    setupSection.style.display = 'none';
-    startSection.style.display = 'none';
-    doneSection.style.display = 'none';
-    practiceSection.style.display = 'block';
-    resetRevealBtn();
-    nextWord();
-  }
+function advanceWord(){
+  testIdx++;
+  loadWord();
+  // Restore controls
+  document.getElementById('child-controls').innerHTML = `
+    <button class="clear-btn" id="clear-btn" onclick="clearCanvas()">🗑 Clear</button>
+    <button class="submit-btn" id="submit-btn" onclick="submitAnswer()" disabled>✅ Check it!</button>
+  `;
+}
 
-  function nextWord() {
-    if (currentIndex >= shuffled.length) { showDone(); return; }
-    currentWord = shuffled[currentIndex];
-    currentIndex++;
-    revealed = false;
-    wordDisplay.className = 'word-display idle';
-    wordDisplay.innerHTML = '<span class="word-placeholder">Ready... press "Say it!" 🎧</span>';
-    revealBtn.disabled = true;
-    speakBtn.disabled = false;
-    speakBtn.innerHTML = '🔊 Say it!';
-    resetRevealBtn();
-    counter.textContent = 'Word ' + currentIndex + ' of ' + shuffled.length;
-    window.speechSynthesis.cancel();
-  }
+function showResults(){
+  window.speechSynthesis.cancel();
+  const correct = testResults.filter(r=>r.correct).length;
+  document.getElementById('score-num').textContent = correct;
+  document.getElementById('score-den').textContent = testResults.length;
 
-  function speakWord() {
-    if (!currentWord || isSpeaking) return;
-    isSpeaking = true;
-    speakBtn.innerHTML = '<span class="speaking-dot"></span> Speaking...';
-    speakBtn.disabled = true;
-    wordDisplay.className = 'word-display';
-    wordDisplay.innerHTML = '<span class="word-label">Listen carefully!</span><span style="font-size:2.5rem;">🔊</span>';
+  const pct = testResults.length ? correct/testResults.length : 0;
+  document.getElementById('results-title').textContent =
+    pct === 1 ? 'Perfect Score! 🏆' :
+    pct >= 0.7 ? 'Great job! 🌟' :
+    pct >= 0.5 ? 'Keep practising! 💪' : 'Let\'s try again! 🐝';
 
-    const utter = new SpeechSynthesisUtterance(currentWord);
-    utter.rate = 0.82;
-    utter.pitch = 1.1;
-    utter.onend = () => {
-      isSpeaking = false;
-      speakBtn.innerHTML = '🔊 Say it again';
-      speakBtn.disabled = false;
-      revealBtn.disabled = false;
-      wordDisplay.innerHTML = '<span class="word-label">Spell it out loud!</span><span style="font-size:2.5rem;">✏️</span><span style="font-size:13px;color:#aaa;">Press "Next word" when done, or "Show spelling" to check</span>';
-    };
-    window.speechSynthesis.speak(utter);
-  }
+  const list = document.getElementById('results-list');
+  list.innerHTML = '';
+  testResults.forEach(r=>{
+    const d = document.createElement('div');
+    d.className = 'result-item ' + (r.correct?'ok':'bad');
+    d.innerHTML = `<span class="ri-word">${r.word}</span><span class="ri-icon">${r.correct?'✅':'❌'}</span>`;
+    list.appendChild(d);
+  });
 
-  function revealSpelling() {
-    if (!currentWord || revealed) return;
-    revealed = true;
-    const letters = currentWord.toUpperCase().split('').join(' · ');
-    wordDisplay.innerHTML =
-      '<span class="word-label">The word is...</span>' +
-      '<span class="current-word">' + currentWord + '</span>' +
-      '<span class="spelling-reveal">' + letters + '</span>';
-    revealBtn.disabled = true;
-    revealBtn.textContent = '✓ Shown!';
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(currentWord);
-    utter.rate = 0.75;
-    utter.pitch = 1.0;
-    window.speechSynthesis.speak(utter);
-  }
+  show('results');
 
-  function resetRevealBtn() {
-    revealBtn.textContent = '👁 Show spelling';
-    revealBtn.disabled = true;
-  }
+  // Victory speech
+  const u = new SpeechSynthesisUtterance(
+    pct===1 ? 'Amazing! Perfect score! You are a spelling champion!' :
+    pct>=0.7 ? `Well done! You got ${correct} out of ${testResults.length}!` :
+    `You got ${correct} out of ${testResults.length}. Keep practising!`
+  );
+  u.rate=0.9; u.pitch=1.1;
+  window.speechSynthesis.speak(u);
+}
 
-  function showDone() {
-    practiceSection.style.display = 'none';
-    doneSection.style.display = 'block';
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance('Amazing work! You finished all your spelling words!');
-    utter.rate = 0.9;
-    utter.pitch = 1.2;
-    window.speechSynthesis.speak(utter);
+// Resize canvas on orientation change
+window.addEventListener('resize', ()=>{
+  if(document.getElementById('child').classList.contains('active')){
+    const canvas = document.getElementById('write-canvas');
+    const wrap = document.getElementById('canvas-wrap');
+    const img = canvas.toDataURL();
+    canvas.width = wrap.clientWidth;
+    canvas.height = wrap.clientHeight;
+    ctx.strokeStyle='#1A1A1A'; ctx.lineWidth=4; ctx.lineCap='round'; ctx.lineJoin='round';
+    const i = new Image(); i.onload=()=>ctx.drawImage(i,0,0); i.src=img;
   }
-
-  function restartPractice() {
-    doneSection.style.display = 'none';
-    practiceSection.style.display = 'block';
-    startPractice();
-  }
-
-  function restartSetup() {
-    window.speechSynthesis.cancel();
-    doneSection.style.display = 'none';
-    practiceSection.style.display = 'none';
-    setupSection.style.display = 'block';
-    startSection.style.display = 'block';
-    currentWord = null;
-    isSpeaking = false;
-    speakBtn.innerHTML = '🔊 Say it!';
-    resetRevealBtn();
-  }
+});
 </script>
 </body>
 </html>
